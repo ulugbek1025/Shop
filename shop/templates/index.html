@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="{% static 'shop/style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+
+<!-- navbar start-->
+<div class="row">
+<div class="col-md-12">
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+
+        <li class="nav-item">
+
+
+            <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="myfunc()">
+  <button id="cart" class="btn btn-primary" type="button" disabled>Cart(0)</button>
+</span>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+      </div>
+</div>
+<!-- navbar end-->
+<div class="row">
+
+    <div class="col-md-12">
+        <form class="card card-sm">
+            <div class="card-body row no-gutters align-items-center">
+                <div class="col">
+                    <input type="search" name="item_name" placeholder="Serch for products" class="form-control form-control-borderless">
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-success" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3">
+            <div class="card">
+                <img src="{{ product.image }}" class="card-img-top" style="width: 300px;height: 200px">
+                <div class="card-body">
+                    <div class="card-title">
+                       {{ product.title }}
+                    </div>
+                    <div class="card-text">
+
+                        <p>$ {{ product.price }}</p>
+                    </div>
+                    <a href="/{{ product.id }}" class="btn btn-warning">View</a>
+                    <button id="{{ product.title }}" class="btn atc btn-warning">Add to cart</button>
+                </div>
+
+            </div>
+
+        </div>
+{% endfor %}
+    </div>
+<div class="row">
+    <div class="col-md-3 offset-md-4">
+        <ul class="pagination">
+                {% if products.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.previous_page_number }}">
+                        Previes
+                </a>
+           </li>
+                {% endif %}
+
+
+                     <li class="page-item active">
+                <a class="page-link"  href="?page={{ products.number }}">
+                           Current
+                </a>
+           </li>
+
+                {% if products.has_next %}
+            <li class="page-item">
+                <a class="page-link"  href="?page={{ products.next_page_number }}">
+                    Next
+                </a>
+           </li>
+                {% endif %}
+        </ul>
+
+    </div>
+
+</div>
+</div>
+
+</body>
+
+<script type="text/javascript">
+    console.log('This is working')
+
+    if (localStorage.getItem('cart')==null){
+        var cart={};
+    } else {
+            cart=JSON.parse(localStorage.getItem('cart'));
+    }
+
+    $(document).on('click','.atc',function (){
+            console.log("the add to cart button is clicked");
+            var item_id=this.id.toString()
+           console.log(item_id);
+       if(cart[item_id]!=undefined){
+           cart[item_id]=cart[item_id]+1;
+       }
+       else {
+           cart[item_id]=1;
+       }
+      console.log(cart);
+       localStorage.setItem('cart',JSON.stringify(cart))
+        document.getElementById('cart').innerHTML="Cart("+Object.keys(cart).length+")";
+
+    });
+var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  return new bootstrap.Popover(popoverTriggerEl)
+})
+    function myfunc(){
+    return 'hello'
+    }
+</script>
+</html>
